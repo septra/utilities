@@ -1,0 +1,52 @@
+#!/usr/bin/env python3.6
+
+from subprocess import call
+import argparse
+
+if __name__ == '__main__':
+
+    description = 'Extract page range from a pdf document'
+
+    parser = argparse.ArgumentParser(description = description)
+
+    parser.add_argument(
+            '-o',
+            '--output',
+            type = str,
+            help = 'Output file name',
+            default = 'extracted-output.pdf')
+
+    parser.add_argument(
+            '-i',
+            '--input',
+            type = str,
+            help = 'Input file',
+            required = True)
+
+    parser.add_argument(
+            '-b',
+            '--beginpage',
+            type = int,
+            help = 'Beginning page',
+            required = True)
+
+    parser.add_argument(
+            '-e',
+            '--endpage',
+            type = int,
+            help = 'Ending page',
+            required = True)
+
+    args = parser.parse_args()
+
+    call([
+        "gs",
+        "-dNOPAUSE",
+        "-dBATCH",
+        f"-dFirstPage={args.beginpage}",
+        f"-dLastPage={args.endpage}",
+        "-sDEVICE=pdfwrite",
+        f"-sOutputFile={args.output}",
+        "-f",
+        f"{args.input}"])
+
